@@ -5,3 +5,4 @@
 export * from './lib/ng-codeflask.service';
 export * from './lib/ng-codeflask.component';
 export * from './lib/ng-codeflask.module';
+export * from './lib/ng-codeflask.types';

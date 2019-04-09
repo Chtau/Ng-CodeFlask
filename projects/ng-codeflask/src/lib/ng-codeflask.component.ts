@@ -46,7 +46,7 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
     this.propagateChange(this.code);
   }
   setDisabledState?(isDisabled: boolean): void {
-    this.isReadOnly = isDisabled;
+    this.readonly = isDisabled;
   }
 
   emitChanges() {
@@ -72,7 +72,11 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
   set readonly(val: boolean) {
     this.isReadOnly = val;
     if (this.afterInit === true) {
-      this.onBuildEditor();
+      if (this.isReadOnly === true) {
+        this.onDisableReadonly();
+      } else {
+        this.onEnableReadonly();
+      }
     }
   }
 
@@ -104,16 +108,13 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
   set language(val: string) {
     this.currentLanguage = val;
     if (this.afterInit === true) {
-      this.onBuildEditor();
+      this.onUpdateLanguage(this.currentLanguage);
     }
   }
 
   @Input()
   set addLanguage(prismLanguage: {lang: string, options: any}) {
-    if (this.afterInit === true) {
-      this.onBuildEditor();
-    }
-    this.flaskInstance.addLanguage(prismLanguage.lang, prismLanguage.options);
+    this.onAddLanguage(prismLanguage);
   }
 
   ngAfterViewInit() {
@@ -134,7 +135,7 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
     });
   }
 
-  private onCodeUpdate(val: any) {
+  private onCodeUpdate(val: any): void {
     if (this.flaskInstance != null) {
       this.flaskInstance.updateCode(val);
     }
@@ -143,6 +144,30 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
   private onGetCode(): any {
     if (this.flaskInstance != null) {
       return this.flaskInstance.getCode();
+    }
+  }
+
+  private onUpdateLanguage(lang: string): void {
+    if (this.flaskInstance != null) {
+      this.flaskInstance.updateLanguage(lang);
+    }
+  }
+
+  private onAddLanguage(prismLanguage: {lang: string, options: any}): void {
+    if (this.flaskInstance != null) {
+      this.flaskInstance.addLanguage(prismLanguage.lang, prismLanguage.options);
+    }
+  }
+
+  private onDisableReadonly(): void {
+    if (this.flaskInstance != null) {
+      this.flaskInstance.disableReadonlyMode();
+    }
+  }
+
+  private onEnableReadonly(): void {
+    if (this.flaskInstance != null) {
+      this.flaskInstance.enableReadonlyMode();
     }
   }
 
