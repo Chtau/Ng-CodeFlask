@@ -31,7 +31,7 @@ export class NgCodeflaskComponent implements ControlValueAccessor {
     rtl: this.isRTL
   };
 
-  @ViewChild("editor") editorContent: ElementRef;
+  @ViewChild("editor", { static: true }) editorContent: ElementRef;
 
   writeValue(obj: any): void {
     this.code = obj;
